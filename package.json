@@ -26,6 +26,7 @@
   "dependencies": {
     "discord.js": "^13.2.0",
     "dotenv": "^10.0.0",
+    "parkingspace-commons": "github:team-spacelab/parkingspace-commons#pkg",
     "typescript": "^4.4.3"
   },
   "engines": {
