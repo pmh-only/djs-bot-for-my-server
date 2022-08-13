@@ -10,6 +10,11 @@ export default class BanvoteCommand implements Command {
     const banReason = interaction.options.getString('reason', true)
     const banMemberName = banMember.nickname ? `${banMember.nickname} (${banMember.user.tag})` : banMember.user.tag
 
+    if (!banMember.bannable) {
+      await interaction.editReply('ㅠㅠ 관리자는 추방할 수 없어요...')
+      return
+    }
+
     await interaction.editReply('추방 투표를 시작했어요!')
     const message = await interaction.channel?.send({
       embeds: [{
