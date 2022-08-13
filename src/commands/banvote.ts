@@ -88,7 +88,7 @@ export default class BanvoteCommand implements Command {
       })
 
       if (agreeUserIds.length > 4) {
-        await message.reply('추방 찬성이 5표 이상임으로 5초 후 추방을 진행합니다.\n잘 가세요 <@' + banMember.id + '>님! :wave:')
+        await message.reply(`추방 찬성이 5표 이상임으로 5초 후 추방을 진행합니다.\n잘 가세요 ${banMember.id}님! :wave:`)
         setTimeout(async () => {
           await banMember.ban()
         }, 5 * 1000)
