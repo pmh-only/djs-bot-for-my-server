@@ -15,24 +15,29 @@ export default class BanvoteCommand implements Command {
       return
     }
 
+    if (interaction.channel?.id !== '708923881632825354') {
+      await interaction.editReply('추방 투표 명령어는 공론화를 위해 <#708923881632825354>에서만 해주세요!')
+      return
+    }
+
     await interaction.editReply('추방 투표를 시작했어요!')
     const message = await interaction.channel?.send({
+      content: `누군가가 \`${banMemberName}\`님의 대한 추방 투표를 시작했습니다!`,
       embeds: [{
         title: `\`${banMemberName}\`님의 대한 추방투표`,
         fields: [
-          {
-            name: '추방 신청된 사유',
-            value: '```' + banReason + '```',
-            inline: true
-          },
+
           {
             name: '추방 투표 규칙',
             value:
               '1. 추방 찬성이 총합 5표 이상 모일경우 자동 추방됩니다.\n' +
               '2. 투표가 시작되거나 앞 사람이 투표한 시간으로부터 30분이 지난경우 투표는 무효로 자동 종료됩니다.\n' +
               '3. 추방을 찬성한 후에는 찬성을 취소할 수 없습니다.\n' +
-              '4. 관리자 재량에 따라 추방 요청이 취소될 수 있습니다. (이 메시지를 삭제하는 것으로 처리)',
-            inline: true
+              '4. 관리자 재량에 따라 추방 요청이 취소될 수 있습니다. (이 메시지를 삭제하는 것으로 처리)'
+          },
+          {
+            name: '추방 사유',
+            value: '```' + banReason + '```'
           }
         ]
       }],
