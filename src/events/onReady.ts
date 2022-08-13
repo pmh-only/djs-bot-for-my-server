@@ -10,9 +10,9 @@ export default function onReady () {
   if (process.env.ENVIROMENT_DEV_GUILD) {
     slash.registCachedCommands(client)
   }
-
-  process.once('SIGINT', () => {
-    slash.deregistCachedDevCommands(client)
-    process.exit(0)
-  })
 }
+
+process.once('SIGINT', () => {
+  slash.deregistCachedDevCommands(client)
+  process.exit(0)
+})
