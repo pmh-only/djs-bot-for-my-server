@@ -25,7 +25,7 @@ export default class SlashHandler {
 
   public runCommand (interaction: CommandInteraction) {
     const commandName = interaction.commandName
-    const command = this.commands.get(commandName.startsWith('-') ? commandName.replace('-', '') : commandName)
+    const command = this.commands.get(commandName.startsWith('-') && ENVIROMENT_DEV_GUILD ? commandName.replace('-', '') : commandName)
 
     if (!command) return
     command.run(interaction)
@@ -56,5 +56,14 @@ export default class SlashHandler {
     await client.application.commands.set([])
     await client.application.commands.set(metadatas)
     console.log('Registered commands.')
+  }
+
+  public async deregistCachedDevCommands (client: BotClient): Promise<void> {
+    if (!client.application) return console.warn('WARNING: deregistCachedDevCommands() called before application is ready.')
+
+    if (ENVIROMENT_DEV_GUILD) {
+      await client.application.commands.set([], ENVIROMENT_DEV_GUILD!)
+      console.log('Deregisted Dev Commands.')
+    }
   }
 }

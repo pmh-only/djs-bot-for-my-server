@@ -61,12 +61,12 @@ export default class PingCommand implements Command {
   /** 해당 명령어의 대한 설정입니다. */
   metadata = <D>{
     name: 'color',
-    description: 'Set name color',
+    description: '닉네임 색상을 변경합니다',
     options: [{
       name: 'hex',
       type: 'STRING',
       required: true,
-      description: 'hex code (ex: #fafafa)'
+      description: '16진수 rgb색상 코드 (ex: #fafafa)'
     }]
   }
 }
