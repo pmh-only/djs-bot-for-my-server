@@ -62,7 +62,7 @@ export default class BanvoteCommand implements Command {
         filter: (i) => i.customId === interaction.id && !agreeUserIds.includes(i.user.id),
         time: 30 * 60 * 1000,
         componentType: 'BUTTON'
-      })
+      }).catch(() => undefined)
 
       if (!i) {
         message.reply(`아쉽게도 추방까지 \`${5 - agreeUserIds.length}\`표를 남기고 시간 초과로 인해 \`${banMemberName}\`님의 대한 추방투표가 무효/취소되었습니다ㅠㅠ`).catch(() => {})
