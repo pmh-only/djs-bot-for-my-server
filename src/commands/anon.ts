@@ -22,6 +22,7 @@ export default class PingCommand implements Command {
     options: [{
       name: 'message',
       type: 'STRING',
+      description: '보낼 메시지',
       required: true
     }]
   }
