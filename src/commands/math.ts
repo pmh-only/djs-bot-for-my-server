@@ -1,6 +1,6 @@
 import Command from '../interfaces/Command'
 import { I, D } from '../aliases/discord.js'
-import math from 'mathjs'
+import * as math from 'mathjs'
 import { MessageActionRow, MessageButton } from 'discord.js'
 
 /** 계산기 명령어 */
