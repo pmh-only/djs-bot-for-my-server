@@ -22,13 +22,13 @@ export default class MathCommand implements Command {
       derivative: () => { throw oops }
     }, { override: true })
 
-    const result = () => {
+    const result = (() => {
       try {
         return limitedEvaluate(expr)
       } catch (error) {
         return error instanceof Error ? error.message : 'wtf'
       }
-    }
+    })()
 
     interaction.editReply({
       content: JSON.stringify(result, null, 2),
