@@ -2,8 +2,8 @@ import Command from '../interfaces/Command'
 import { I, D } from '../aliases/discord.js.js'
 import { TextChannel } from 'discord.js'
 
-/** 핑 명령어 */
-export default class PingCommand implements Command {
+/** 익명 메시지 전송 명령어 */
+export default class AnonCommand implements Command {
   /** 실행되는 부분입니다. */
   async run (interaction: I) {
     const channel = interaction.channel as TextChannel

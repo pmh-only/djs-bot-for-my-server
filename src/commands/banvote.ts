@@ -2,7 +2,7 @@ import Command from '../interfaces/Command'
 import { I, D } from '../aliases/discord.js.js'
 import { GuildMember, MessageActionRow, MessageButton } from 'discord.js'
 
-/** 핑 명령어 */
+/** 추방 투표 명령어 */
 export default class BanvoteCommand implements Command {
   /** 실행되는 부분입니다. */
   async run (interaction: I) {

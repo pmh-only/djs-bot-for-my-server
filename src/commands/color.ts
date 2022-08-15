@@ -2,7 +2,8 @@ import Command from '../interfaces/Command'
 import { I, D } from '../aliases/discord.js'
 import { GuildMemberRoleManager, MessageActionRow, MessageButton } from 'discord.js'
 
-export default class PingCommand implements Command {
+/** 색상 변경 명령어 */
+export default class ColorCommand implements Command {
   /** 실행되는 부분입니다. */
   async run (interaction: I) {
     if (!interaction.member) return
