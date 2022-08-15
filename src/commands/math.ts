@@ -50,7 +50,8 @@ export default class MathCommand implements Command {
     options: [{
       name: 'expr',
       type: 'STRING',
-      description: 'math.js 계산식을 작성해주세요.'
+      description: 'math.js 계산식을 작성해주세요.',
+      required: true
     }]
   }
 }
