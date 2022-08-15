@@ -54,7 +54,6 @@ export default class PingCommand implements Command {
       await roles.add(role)
     }
 
-    await interaction.deleteReply()
     await i.editReply('적용했어요!')
   }
 
