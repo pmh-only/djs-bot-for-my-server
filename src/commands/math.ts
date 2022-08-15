@@ -19,7 +19,8 @@ export default class MathCommand implements Command {
       evaluate: () => { throw oops },
       parse: () => { throw oops },
       simplify: () => { throw oops },
-      derivative: () => { throw oops }
+      derivative: () => { throw oops },
+      arcsin: limitedMath.asin
     }, { override: true })
 
     const result = (() => {
