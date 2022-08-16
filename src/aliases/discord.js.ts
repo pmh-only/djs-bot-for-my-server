@@ -1,1 +1,1 @@
-export { ApplicationCommandData as D, CommandInteraction as I } from 'discord.js'
+export { ChatInputCommandInteraction as I } from 'discord.js'

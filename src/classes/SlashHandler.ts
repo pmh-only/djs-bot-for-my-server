@@ -1,4 +1,4 @@
-import { ApplicationCommandData, CommandInteraction } from 'discord.js'
+import { ApplicationCommandData, ChatInputCommandInteraction } from 'discord.js'
 import { readdirSync } from 'fs'
 import _ from '../consts'
 import BotClient from './BotClient'
@@ -23,9 +23,9 @@ export default class SlashHandler {
     }
   }
 
-  public runCommand (interaction: CommandInteraction) {
+  public runCommand (interaction: ChatInputCommandInteraction) {
     const commandName = interaction.commandName
-    const command = this.commands.get(commandName.startsWith('-') && ENVIROMENT_DEV_GUILD ? commandName.replace('-', '') : commandName)
+    const command = this.commands.get(commandName)
 
     if (!command) return
     command.run(interaction)
@@ -35,27 +35,20 @@ export default class SlashHandler {
     if (!client.application) return console.warn('WARNING: registCachedCommands() called before application is ready.')
 
     const metadatas = [] as ApplicationCommandData[]
-    for (const command of this.commands.values()) {
-      if (!command.metadata) continue
+    for (const { metadata } of this.commands.values()) {
+      if (!metadata) continue
 
-      if (ENVIROMENT_DEV_GUILD) {
-        command.metadata.name = `-${command.metadata.name}`
-      }
-
-      metadatas.push(command.metadata)
+      metadatas.push(
+        metadata
+          .setDMPermission(false)
+          .toJSON()
+      )
     }
 
-    if (ENVIROMENT_DEV_GUILD) {
-      await client.application.commands.set([], ENVIROMENT_DEV_GUILD!)
-      await client.application.commands.set(metadatas, ENVIROMENT_DEV_GUILD!)
+    await client.application.commands.set([], ENVIROMENT_DEV_GUILD!)
+    await client.application.commands.set(metadatas, ENVIROMENT_DEV_GUILD!)
 
-      console.log('Registered commands for guild:', ENVIROMENT_DEV_GUILD!)
-      return
-    }
-
-    await client.application.commands.set([])
-    await client.application.commands.set(metadatas)
-    console.log('Registered commands.')
+    console.log('Registered commands for guild:', ENVIROMENT_DEV_GUILD!)
   }
 
   public async deregistCachedDevCommands (client: BotClient): Promise<void> {

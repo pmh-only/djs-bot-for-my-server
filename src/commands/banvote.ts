@@ -1,12 +1,13 @@
 import Command from '../interfaces/Command'
-import { I, D } from '../aliases/discord.js.js'
-import { GuildMember, MessageActionRow, MessageButton } from 'discord.js'
+import { I } from '../aliases/discord.js.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js'
 
 /** 추방 투표 명령어 */
 export default class BanvoteCommand implements Command {
   /** 실행되는 부분입니다. */
   async run (interaction: I) {
-    const banMember = interaction.options.getMember('user', true) as GuildMember
+    await interaction.deferReply({ ephemeral: true })
+    const banMember = interaction.options.getMember('user') as GuildMember
     const banReason = interaction.options.getString('reason', true)
     const banMemberName = banMember.nickname ? `${banMember.nickname} (${banMember.user.tag})` : banMember.user.tag
 
@@ -21,37 +22,37 @@ export default class BanvoteCommand implements Command {
     }
 
     await interaction.editReply('추방 투표를 시작했어요!')
+
+    const embed =
+      new EmbedBuilder()
+        .setTitle(`\`${banMemberName}\`님의 대한 추방투표`)
+        .addFields({
+          name: '추방 투표 규칙',
+          value:
+            '1. 추방 찬성이 총합 7표 이상 모일경우 자동 추방됩니다.\n' +
+            '2. 투표가 시작되거나 앞 사람이 투표한 시간으로부터 30분이 지난경우 투표는 무효로 자동 종료됩니다.\n' +
+            '3. 추방을 찬성한 후에는 찬성을 취소할 수 없습니다.\n' +
+            '4. 관리자 재량에 따라 추방 요청이 취소될 수 있습니다. (이 메시지를 삭제하는 것으로 처리)'
+        })
+        .addFields({
+          name: '추방 사유',
+          value: '```' + banReason + '```'
+        })
+
+    const button =
+      new ButtonBuilder()
+        .setCustomId(interaction.id)
+        .setLabel('찬성합니다! (현재 0표, 추방까지 7표 남음)')
+        .setStyle(ButtonStyle.Success)
+
+    const actionRow =
+      new ActionRowBuilder<ButtonBuilder>()
+        .addComponents(button)
+
     const message = await interaction.channel?.send({
       content: `누군가가 \`${banMemberName}\`님의 대한 추방 투표를 시작했습니다!`,
-      embeds: [{
-        title: `\`${banMemberName}\`님의 대한 추방투표`,
-        fields: [
-
-          {
-            name: '추방 투표 규칙',
-            value:
-              '1. 추방 찬성이 총합 7표 이상 모일경우 자동 추방됩니다.\n' +
-              '2. 투표가 시작되거나 앞 사람이 투표한 시간으로부터 30분이 지난경우 투표는 무효로 자동 종료됩니다.\n' +
-              '3. 추방을 찬성한 후에는 찬성을 취소할 수 없습니다.\n' +
-              '4. 관리자 재량에 따라 추방 요청이 취소될 수 있습니다. (이 메시지를 삭제하는 것으로 처리)'
-          },
-          {
-            name: '추방 사유',
-            value: '```' + banReason + '```'
-          }
-        ]
-      }],
-      components: [
-        new MessageActionRow({
-          components: [
-            new MessageButton({
-              customId: interaction.id,
-              label: '찬성합니다! (현재 0표, 추방까지 7표 남음)',
-              style: 'SUCCESS'
-            })
-          ]
-        })
-      ]
+      embeds: [embed],
+      components: [actionRow]
     })
 
     if (!message) return
@@ -61,7 +62,7 @@ export default class BanvoteCommand implements Command {
       const i = await message.channel.awaitMessageComponent({
         filter: (i) => i.customId === interaction.id && !agreeUserIds.includes(i.user.id),
         time: 30 * 60 * 1000,
-        componentType: 'BUTTON'
+        componentType: ComponentType.Button
       }).catch(() => undefined)
 
       if (!i) {
@@ -73,18 +74,11 @@ export default class BanvoteCommand implements Command {
       i.reply({ ephemeral: true, content: '찬성표를 던졌습니다!' })
       await message.reply(`누군가가 \`${banMemberName}\`님의 대한 추방투표 찬성표를 던졌습니다!\n(현재 ${agreeUserIds.length}표, 추방까지 ${7 - agreeUserIds.length}표 남음)`)
 
+      button.setLabel(`찬성합니다! (현재 ${agreeUserIds.length}표, 추방까지 ${7 - agreeUserIds.length}표 남음)`)
+      actionRow.setComponents(button)
+
       await message.edit({
-        components: [
-          new MessageActionRow({
-            components: [
-              new MessageButton({
-                customId: interaction.id,
-                label: `찬성합니다! (현재 ${agreeUserIds.length}표, 추방까지 ${7 - agreeUserIds.length}표 남음)`,
-                style: 'SUCCESS'
-              })
-            ]
-          })
-        ]
+        components: [actionRow]
       })
 
       if (agreeUserIds.length > 6) {
@@ -92,27 +86,22 @@ export default class BanvoteCommand implements Command {
         setTimeout(async () => {
           await banMember.ban()
         }, 5 * 1000)
+        return
       }
     }
   }
 
   /** 해당 명령어의 대한 설정입니다. */
-  metadata = <D>{
-    name: 'banvote',
-    description: '유저 추방 투표를 시작합니다. (30분내 7표 이상일시 추방)',
-    options: [
-      {
-        name: 'user',
-        type: 'USER',
-        description: '추방 대상자',
-        required: true
-      },
-      {
-        name: 'reason',
-        type: 'STRING',
-        description: '추방 사유',
-        required: true
-      }
-    ]
-  }
+  public metadata =
+    new SlashCommandBuilder()
+      .setName('banvote')
+      .setDescription('유저 추방 투표를 시작합니다.')
+      .addUserOption((option) => option
+        .setName('user')
+        .setDescription('추방 대상자')
+        .setRequired(true))
+      .addStringOption((option) => option
+        .setName('reason')
+        .setDescription('추방 사유')
+        .setRequired(true))
 }
