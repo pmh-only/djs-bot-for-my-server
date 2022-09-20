@@ -10,9 +10,7 @@ export default class MathCommand implements Command {
     await interaction.deferReply({ ephemeral: false })
 
     const expr = interaction.options.getString('expr', true)
-    console.log(expr)
     const result = this.evaluate(expr)
-    console.log(result)
 
     const button =
       new ButtonBuilder()
