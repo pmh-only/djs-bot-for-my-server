@@ -10,13 +10,15 @@ export default class MathCommand implements Command {
     await interaction.deferReply({ ephemeral: false })
 
     const expr = interaction.options.getString('expr', true)
+    console.log(expr)
     const result = this.evaluate(expr)
+    console.log(result)
 
     const button =
       new ButtonBuilder()
         .setStyle(ButtonStyle.Link)
         .setURL('https://mathjs.org/docs/reference/functions.html')
-        .setEmoji({ name: 'book' })
+        .setEmoji({ name: '📖' })
         .setLabel('함수 목록')
 
     const actionsRow =
@@ -46,7 +48,7 @@ export default class MathCommand implements Command {
 
   constructor () {
     const limitedMath = math.create(math.all)
-    const blocked = ['import', 'createUnit', 'evaluate', 'parse', 'simplify', 'derivative']
+    const blocked = ['import']
     const blockedFn = blocked.map((v) => ({ [v]: () => 0 }))
 
     limitedMath.import({ ...blockedFn }, { override: true })
