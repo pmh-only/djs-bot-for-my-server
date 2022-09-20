@@ -30,7 +30,7 @@ export default class ColorCommand implements Command {
 
     const embed =
       new EmbedBuilder()
-        .setColor(parseInt(hex.replace('#', ''), 10))
+        .setColor(parseInt(hex.replace('#', ''), 16))
         .setTitle('이 색상으로 할까요?')
 
     await interaction.editReply({
