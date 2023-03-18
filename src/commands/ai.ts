@@ -66,6 +66,10 @@ export default class AICommand implements Command {
       .setName('ai')
       .setDescription('OpenAI GPT 모델과 대화합니다')
       .addStringOption((builder) => builder
+        .setName('prompt')
+        .setRequired(true)
+        .setDescription('내용'))
+      .addStringOption((builder) => builder
         .setName('model')
         .setDescription('GPT 모델을 선택해주세요')
         .addChoices(
@@ -73,8 +77,4 @@ export default class AICommand implements Command {
           { name: 'GPT4', value: 'GPT4' }
         )
         .setRequired(false))
-      .addStringOption((builder) => builder
-        .setName('prompt')
-        .setRequired(true)
-        .setDescription('내용'))
 }
