@@ -56,8 +56,8 @@ export default class AICommand implements Command {
       })
 
       interaction.editReply(completion.data.choices[0].text ?? 'ERROR!')
-    } catch (error) {
-      interaction.editReply(`ERROR! \`\`\`json\n${JSON.stringify(error, null, 2)}\`\`\``)
+    } catch (error: any) {
+      interaction.editReply(`ERROR! \`${error.message}\``)
     }
   }
 
