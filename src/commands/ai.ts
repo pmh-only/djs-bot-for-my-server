@@ -30,7 +30,7 @@ export default class AICommand implements Command {
 
   /** 실행되는 부분입니다. */
   async run (interaction: I) {
-    const prompt = interaction.options.getString('prompt', true)
+    const content = interaction.options.getString('content', true)
     const model = MODEL_TYPE[interaction.options.getString('model') as keyof typeof MODEL_TYPE ?? 'GPT3_5'] ?? MODEL_TYPE.GPT3_5
 
     if (this.cooldown[model].includes(interaction.user.id)) {
@@ -49,13 +49,16 @@ export default class AICommand implements Command {
     }, COOLDOWN_TIME[model])
 
     try {
-      const completion = await this.openai.createCompletion({
+      const completion = await this.openai.createChatCompletion({
         model,
-        prompt,
+        messages: [{
+          role: 'user',
+          content
+        }],
         max_tokens: 1000
       })
 
-      interaction.editReply(completion.data.choices[0].text ?? 'ERROR!')
+      interaction.editReply(completion.data.choices[0].message ?? 'ERROR!')
     } catch (error: any) {
       interaction.editReply(`ERROR! \`${error.message}\``)
     }
@@ -66,7 +69,7 @@ export default class AICommand implements Command {
       .setName('ai')
       .setDescription('OpenAI GPT 모델과 대화합니다')
       .addStringOption((builder) => builder
-        .setName('prompt')
+        .setName('content')
         .setRequired(true)
         .setDescription('내용'))
       .addStringOption((builder) => builder
