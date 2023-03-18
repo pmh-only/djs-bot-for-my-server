@@ -4,8 +4,8 @@ import { SlashCommandBuilder } from 'discord.js'
 import { Configuration, OpenAIApi } from 'openai'
 
 const MODEL_TYPE = {
-  GPT3_5: 'gpt3.5-turbo',
-  GPT4: 'gpt4'
+  GPT3_5: 'gpt-3.5-turbo',
+  GPT4: 'gpt-4'
 } as const
 
 const COOLDOWN_TIME = {
