@@ -1,4 +1,4 @@
-import { ApplicationCommandData, ChatInputCommandInteraction } from 'discord.js'
+import { ChatInputCommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js'
 import { readdirSync } from 'fs'
 import _ from '../consts'
 import BotClient from './BotClient'
@@ -34,7 +34,7 @@ export default class SlashHandler {
   public async registCachedCommands (client: BotClient): Promise<void> {
     if (!client.application) return console.warn('WARNING: registCachedCommands() called before application is ready.')
 
-    const metadatas = [] as ApplicationCommandData[]
+    const metadatas = [] as RESTPostAPIChatInputApplicationCommandsJSONBody[]
     for (const { metadata } of this.commands.values()) {
       if (!metadata) continue
 
