@@ -8,5 +8,5 @@
   ![](docs/color-demo.png)
 3. Create temp invite link\
   ![](docs/invite-demo.png)
-4. Anonymous messeging\
+4. Anonymous messaging\
   ![](docs/anon-demo.png)
